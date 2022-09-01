@@ -1,11 +1,13 @@
 // Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
-import { SET_WALLET } from '../actions';
+import { SET_WALLET, API_REQUEST, API_SUCCESS, API_FAIL } from '../actions';
 
 const INITIAL_STATE = {
   currencies: [], // array de string
   expenses: [], // array de objetos, com cada objeto tendo as chaves id, value, currency, method, tag, description e exchangeRates
   editor: false, // valor booleano que indica de uma despesa está sendo editada
   idToEdit: 0, // valor numérico que armazena o id da despesa que esta sendo editada
+  isFetching: false,
+  error: '',
 };
 
 const walletReducer = (state = INITIAL_STATE, action) => {
@@ -14,6 +16,24 @@ const walletReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       ...action.value,
+    };
+  case API_REQUEST:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case API_SUCCESS:
+    return {
+      ...state,
+      currencies: action.payload.currencies,
+      isFetching: false,
+      error: '',
+    };
+  case API_FAIL:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.payload.error,
     };
   default:
     return state;
