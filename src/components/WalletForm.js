@@ -1,34 +1,48 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchCurrencyAPI } from '../redux/actions';
+import { fetchCurrencyAPI, fetchExchangeRates } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
     value: '',
     description: '',
     currency: 'USD',
-    paymentMethod: 'Dinheiro',
+    method: 'Dinheiro',
     tag: 'Alimentação',
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
-    // dispatch(fetchCurrencyAPI);
     dispatch(fetchCurrencyAPI());
   }
 
   handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  onClickButton = (event) => {
+    event.preventDefault();
+    const { dispatch } = this.props;
+    dispatch(fetchExchangeRates(this.state));
+    this.setState({
+      value: '',
+      description: '',
+      currency: 'USD',
+      method: 'cash',
+      tag: 'food',
+    });
   };
 
   render() {
-    const { value, description, currency, paymentMethod, tag } = this.state;
+    const { value, description, currency, method, tag } = this.state;
 
     const { currencies } = this.props;
 
     const currenciesKeys = currencies.map((money) => (
-      <option key={ money } value={ money }>{money}</option>
+      <option key={ money } value={ money }>{ money }</option>
     ));
 
     return (
@@ -64,13 +78,13 @@ class WalletForm extends Component {
           </select>
         </label>
 
-        <label htmlFor="paymentMethod">
+        <label htmlFor="method">
           Pagamento:
           <select
             data-testid="method-input"
-            id="paymentMethod"
-            name="paymentMethod"
-            value={ paymentMethod }
+            id="method"
+            name="method"
+            value={ method }
             onChange={ this.handleChange }
           >
             <option value="Dinheiro">Dinheiro</option>
@@ -84,7 +98,7 @@ class WalletForm extends Component {
           <select
             data-testid="tag-input"
             id="tag-input"
-            name="expense"
+            name="tag"
             value={ tag }
             onChange={ this.handleChange }
           >
@@ -95,6 +109,13 @@ class WalletForm extends Component {
             <option value="Saúde">Saúde</option>
           </select>
         </label>
+
+        <button
+          type="submit"
+          onClick={ this.onClickButton }
+        >
+          Adicionar despesa
+        </button>
 
       </form>
     );
