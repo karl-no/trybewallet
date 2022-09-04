@@ -1,6 +1,12 @@
 // Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
 import {
-  API_REQUEST, API_SUCCESS, API_FAIL, EXCHANGE_RATE, DELETE_EXPENSE,
+  API_REQUEST,
+  API_SUCCESS,
+  API_FAIL,
+  EXCHANGE_RATE,
+  DELETE_EXPENSE,
+  EDIT_EXPENSE,
+  UPDATE_EXPENSE,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -21,8 +27,7 @@ const walletReducer = (state = INITIAL_STATE, action) => {
       error: '',
       expenses: [
         ...state.expenses,
-        { id: state.expenses.length,
-          ...action.payload },
+        { id: state.expenses.length, ...action.payload },
       ],
     };
   case API_REQUEST:
@@ -32,16 +37,26 @@ const walletReducer = (state = INITIAL_STATE, action) => {
     };
   case API_SUCCESS:
     return {
-      ...state,
-      currencies: action.payload.currencies,
-      isFetching: false,
-      error: '',
+      ...state, currencies: action.payload.currencies, isFetching: false, error: '',
     };
   case API_FAIL:
     return {
+      ...state, isFetching: false, error: action.payload.error,
+    };
+  case EDIT_EXPENSE:
+    return {
+      ...state, editor: true, idToEdit: action.payload,
+    };
+  case UPDATE_EXPENSE:
+    return {
       ...state,
-      isFetching: false,
-      error: action.payload.error,
+      expenses: state.expenses.map((expense) => {
+        if (expense.id === state.idToEdit) {
+          return { ...expense, ...action.payload };
+        }
+        return expense;
+      }),
+      editor: false,
     };
   case DELETE_EXPENSE:
     return {

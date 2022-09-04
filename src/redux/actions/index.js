@@ -7,6 +7,8 @@ export const API_SUCCESS = 'API_SUCCESS';
 export const API_FAIL = 'API_FAIL';
 export const EXCHANGE_RATE = 'EXCHANGE_RATE';
 export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+export const EDIT_EXPENSE = 'EDIT_EXPENSE';
+export const UPDATE_EXPENSE = 'UPDATE_EXPENSE';
 
 export const setLogin = (payload) => ({ type: EMAIL, payload });
 
@@ -44,6 +46,16 @@ export const fetchExchangeRates = (payload) => (
     }
   }
 );
+
+export const editExpense = (payload) => ({
+  type: EDIT_EXPENSE,
+  payload,
+});
+
+export const updateExpense = (payload) => ({
+  type: UPDATE_EXPENSE,
+  payload,
+});
 
 export const deleteExpense = (payload) => ({
   type: DELETE_EXPENSE,

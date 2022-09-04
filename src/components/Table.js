@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { deleteExpense } from '../redux/actions';
+import { deleteExpense, editExpense } from '../redux/actions';
 
 const TABLE_HEADS = ['Descrição',
   'Tag',
@@ -48,7 +48,13 @@ class Table extends Component {
                   </td>
                   <td>Real</td>
                   <td>
-                    <button type="button">Editar</button>
+                    <button
+                      type="button"
+                      data-testid="edit-btn"
+                      onClick={ () => dispatch(editExpense(expense.id)) }
+                    >
+                      Editar
+                    </button>
                     <button
                       type="button"
                       data-testid="delete-btn"
